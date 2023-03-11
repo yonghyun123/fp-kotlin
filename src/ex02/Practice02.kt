@@ -7,6 +7,7 @@ fun main() {
     print("$result")
 }
 
+
 fun String.product(value: String) {
     println(this + value);
 }
