@@ -43,3 +43,39 @@ private fun divied (v1: Int, v2: Int) : Int{
 private fun multiple (v1: Int, v2: Int) : Int{
     return v1 * v2;
 }
+
+class PartialFunction<in P, out R>(
+    private val condition: (P) -> Boolean,
+    private val f: (P) -> R
+) : (P) -> R{
+
+    override fun invoke(p: P): R = when{
+        condition(p) -> f(p)
+        else -> throw java.lang.IllegalStateException("$p isn't supported")
+    }
+
+    //이거 맞지 않나
+    fun invokeOrElse(p: P, default: @UnsafeVariance R): R = when{
+        condition(p)  -> f(p)
+        else -> default
+
+//        isDefinedAt(p) ->  invoke(p)
+//        else -> default
+    }
+
+    //이해못함...
+    fun orElse(that: PartialFunction<@UnsafeVariance P, @UnsafeVariance R>): PartialFunction<P, R> =
+        PartialFunction({ it: P -> this.isDefinedAt(it) || that.isDefinedAt(it) },
+            { it: P ->
+                when {
+                    this.isDefinedAt(it) -> this(it)
+                    that.isDefinedAt(it) -> that(it)
+                    else -> throw IllegalArgumentException("$it isn't defined")
+                }
+            }
+        )
+
+
+
+    fun isDefinedAt(p: P): Boolean = condition(p)
+}
