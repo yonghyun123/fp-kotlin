@@ -7,6 +7,7 @@ fun main() {
     println(toBinary(7))
     println(replicate(5,5))
     println(elem(3, listOf(1,2,5)))
+    println(quickSort(listOf(1,4,3,2,6)))
 
 }
 
@@ -63,3 +64,15 @@ private fun elem(num: Int, list: List<Int>) : Boolean = when{
 
 fun String.head() = first()
 fun String.tail() = drop(1)
+//3-8 QuickSort 구현
+// 잘 이해가 안가네...
+private fun quickSort(list: List<Int>) : List<Int>{
+    return when{
+        list.isEmpty() -> list
+        else -> {
+            var pivot = list.first();
+            val (left, right) = list.drop(1).partition { it < pivot }
+             quickSort(left) + listOf(pivot) + quickSort(right);
+        }
+    }
+}
