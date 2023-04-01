@@ -1,5 +1,6 @@
 package ex04
 
+
 //고차함수를 이용한 계산기
 fun main() {
     val sum: (Int, Int) -> Int = {
@@ -22,7 +23,21 @@ fun main() {
     println(higherOrder(minus, 2, 2));
     println(higherOrder(divided, 2, 2));
     println(higherOrder(multiple, 2, 2));
+
+    //currying
+    val currying = currying(1)
+    println(currying(2))
+
+    var min = {v1: Int, v2: Int -> {
+        if(v1 > v2) v2
+        else v1
+    }}
+    val curriedMin = min.curried()
+    curriedMin(1);
+    println(curriedMin(3))
+
 }
+fun <P1, P2, R> ((P1, P2) -> R).curried(): (P1) -> (P2) -> R = { p1: P1 -> { p2: P2 -> this(p1, p2) } }
 
 private fun higherOrder(func: (Int, Int) -> Int, v1:Int, v2:Int) : Int{
     return func(v1,v2)
@@ -74,8 +89,17 @@ class PartialFunction<in P, out R>(
                 }
             }
         )
-
-
-
     fun isDefinedAt(p: P): Boolean = condition(p)
 }
+//4-3 두 개의 매개변수를 받아서 큰 값을 반환하는 max 함수를, 커링을 사용할 수 있도록 구현하라.
+fun currying(v1: Int) = {v2: Int -> if(v1 > v2) v1 else v2}
+//4-3 두 개의 매개변수를 받아서 큰 값을 반환하는 min 함수를, 커링을 사용할 수 있도록 구현하라.
+fun min(v1: Int, v2: Int) : Int {
+    return when {
+        v1 > v2 -> v2
+        else -> v1
+    }
+}
+
+
+
