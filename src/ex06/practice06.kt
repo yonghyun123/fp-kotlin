@@ -1,6 +1,6 @@
 package ex06
-
-import java.util.Objects
+import ex06.BTree.Node
+import java.util.NoSuchElementException
 
 fun main() {
 
@@ -19,8 +19,11 @@ fun main() {
 
     fullStack.writeCode()
 
+    val node = BTree.Node(1,BTree.EmptyTree,BTree.EmptyTree)
+
 
 }
+
 
 sealed class Maybe<T>
 object Nothing: Maybe<kotlin.Nothing>()
@@ -56,3 +59,30 @@ class FullStack: Frontend, Backend{
     override val language: String
         get() = super<Backend>.language + super<Frontend>.language
 }
+
+//6-1 이진트리 만들기
+
+sealed class BTree<out T>{
+    data class Node<out T>(
+        val value: T,
+        val leftTree: BTree<T>,
+        val rightTree: BTree<T>
+    ) : BTree<T>()
+    object EmptyTree : BTree<Nothing>() //문법이 안통해
+}
+
+
+
+
+//6-2 이진트리 인서트
+tailrec fun BTree<Int>.insert(elem: Int): Node<Int> =
+    when (this) {
+        is Node -> when {
+            elem <= value -> Node(value, leftTree.insert(elem), rightTree)
+            else -> Node(value, leftTree, rightTree.insert(elem))
+        }
+//        else -> Node(elem, BTree.EmptyTree, BTree.EmptyTree)
+        else -> throw NoSuchElementException()
+    }
+
+//6-3

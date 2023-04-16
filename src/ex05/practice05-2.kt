@@ -27,6 +27,6 @@ fun <T> FunStream<T>.getTail(): FunStream<T> = when(this){
 //5-17
 //fun FunStream<Int>.sum(): Int = {
 //    when(this){
-//
+//        this
 //    }
 //}
